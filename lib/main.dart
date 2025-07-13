@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:gofit/pages/sign_up_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-
-import 'pages/sign_up_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -13,11 +12,16 @@ Future<void> main() async {
   runApp(MyApp());
 }
 
+final supabase = Supabase.instance.client;
+
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(title: 'GOfit', home: SignUpPage());
+    return MaterialApp(
+      title: 'GOfit',
+      home: SignUpPage(),
+    );
   }
 }
