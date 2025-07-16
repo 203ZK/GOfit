@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:gofit/main.dart';
 import 'package:gofit/app_themes.dart';
-import 'package:gofit/pages/sign_in_page.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class LogInPage extends StatefulWidget {
+  const LogInPage({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<LogInPage> createState() => _LogInPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
-  final _signUpFormKey = GlobalKey<FormState>();
+class _LogInPageState extends State<LogInPage> {
+  final _logInFormKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   Future<void> signUp(context) async {
-    final response = await supabase.auth.signUp(
+    final response = await supabase.auth.signInWithPassword(
       email: emailController.text,
       password: passwordController.text,
     );
@@ -26,7 +25,7 @@ class _SignUpPageState extends State<SignUpPage> {
     if (user != null) {
       Navigator.of(
         context,
-      ).push(MaterialPageRoute(builder: (context) => const LogInPage()));
+      ).push(MaterialPageRoute(builder: (context) => const Placeholder()));
     }
   }
 
@@ -38,11 +37,11 @@ class _SignUpPageState extends State<SignUpPage> {
         child: SizedBox(
           width: 400,
           child: Form(
-            key: _signUpFormKey,
+            key: _logInFormKey,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Text('Create an your account'),
+                Text('Log in with your account'),
                 SizedBox(height: 20),
                 TextFormField(
                   decoration: InputDecoration(
@@ -63,11 +62,11 @@ class _SignUpPageState extends State<SignUpPage> {
                 SizedBox(height: 10),
                 ElevatedButton(
                   onPressed: () {
-                    if (_signUpFormKey.currentState!.validate()) {
+                    if (_logInFormKey.currentState!.validate()) {
                       signUp(context);
                     }
                   },
-                  child: Text('Sign Up'),
+                  child: Text('Log in'),
                 ),
               ],
             ),
