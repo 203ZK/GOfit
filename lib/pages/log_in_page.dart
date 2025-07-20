@@ -2,44 +2,32 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gofit/main.dart';
 import 'package:gofit/app_themes.dart';
-import 'package:gofit/pages/log_in_page.dart';
-import 'package:gofit/widgets/box_select.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:gofit/pages/sign_up_page.dart';
 
-class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+class LogInPage extends StatefulWidget {
+  const LogInPage({super.key});
 
   @override
-  State<SignUpPage> createState() => _SignUpPageState();
+  State<LogInPage> createState() => _LogInPageState();
 }
 
-class _SignUpPageState extends State<SignUpPage> {
-  final _signUpFormKey = GlobalKey<FormState>();
+class _LogInPageState extends State<LogInPage> {
+  final _logInFormKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  int? accountRole = 0;
 
   Future<void> signUp(context) async {
-    final response = await supabase.auth.signUp(
+    final response = await supabase.auth.signInWithPassword(
       email: emailController.text,
       password: passwordController.text,
     );
     final user = response.user;
+    print(user?.email);
 
     if (user != null) {
-      print('User ${user.email}created');
       Navigator.of(
         context,
-      ).push(MaterialPageRoute(builder: (context) => const LogInPage()));
-    }
-
-    final roleResponse = await Supabase.instance.client.from('profiles').insert(
-      {'user_id': user?.id, 'role': accountRole},
-    );
-
-    if (roleResponse.error != null) {
-      print('Failed to insert user metadata: ${roleResponse.error!.message}');
-      return;
+      ).push(MaterialPageRoute(builder: (context) => const Placeholder()));
     }
   }
 
@@ -51,13 +39,13 @@ class _SignUpPageState extends State<SignUpPage> {
         child: Padding(
           padding: const EdgeInsets.all(40),
           child: SizedBox(
-            width: 400,
+            // width: 400,
             child: Form(
-              key: _signUpFormKey,
+              key: _logInFormKey,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Text('New to GOfit? Create your account'),
+                  Text('Log in with your account'),
                   SizedBox(height: 20),
                   TextFormField(
                     decoration: InputDecoration(
@@ -78,24 +66,17 @@ class _SignUpPageState extends State<SignUpPage> {
                   SizedBox(height: 10),
                   ElevatedButton(
                     onPressed: () {
-                      if (_signUpFormKey.currentState!.validate()) {
+                      if (_logInFormKey.currentState!.validate()) {
                         signUp(context);
                       }
                     },
-                    child: Text('Sign Up'),
-                  ),
-                  SizedBox(height: 10),
-                  BoxSelect(
-                    initialValue: 0,
-                    onSaved: (value) {
-                      accountRole = value;
-                    },
+                    child: Text('Log in'),
                   ),
                   SizedBox(height: 20),
                   RichText(
                     text: TextSpan(
                       children: [
-                        TextSpan(text: 'Already have an account yet? Login '),
+                        TextSpan(text: 'Don\'t have an account yet? Create one '),
                         TextSpan(
                           text: 'here',
                           style: TextStyle(color: Colors.blue),
@@ -103,7 +84,7 @@ class _SignUpPageState extends State<SignUpPage> {
                             ..onTap = () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (_) => LogInPage()),
+                                MaterialPageRoute(builder: (_) => SignUpPage()),
                               );
                             },
                         ),

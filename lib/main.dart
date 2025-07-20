@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gofit/pages/sign_up_page.dart';
+import 'package:gofit/pages/log_in_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'GOfit',
-      home: SignUpPage(),
+      home: LogInPage(),
     );
   }
 }
