@@ -39,7 +39,7 @@ class _LogInPageState extends State<LogInPage> {
         child: Padding(
           padding: const EdgeInsets.all(40),
           child: SizedBox(
-            // width: 400,
+            width: 400,
             child: Form(
               key: _logInFormKey,
               child: Column(

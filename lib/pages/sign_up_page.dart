@@ -4,7 +4,6 @@ import 'package:gofit/main.dart';
 import 'package:gofit/app_themes.dart';
 import 'package:gofit/pages/log_in_page.dart';
 import 'package:gofit/widgets/box_select.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
@@ -27,20 +26,13 @@ class _SignUpPageState extends State<SignUpPage> {
     final user = response.user;
 
     if (user != null) {
-      print('User ${user.email}created');
-      Navigator.of(
-        context,
-      ).push(MaterialPageRoute(builder: (context) => const LogInPage()));
+      print('User ${user.email} created');
     }
 
-    final roleResponse = await Supabase.instance.client.from('profiles').insert(
-      {'user_id': user?.id, 'role': accountRole},
-    );
+    await supabase.from('profiles')
+      .insert({'user_id': user?.id, 'role': accountRole});
 
-    if (roleResponse.error != null) {
-      print('Failed to insert user metadata: ${roleResponse.error!.message}');
-      return;
-    }
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LogInPage()));
   }
 
   @override
@@ -75,16 +67,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                     controller: passwordController,
                   ),
-                  SizedBox(height: 10),
-                  ElevatedButton(
-                    onPressed: () {
-                      if (_signUpFormKey.currentState!.validate()) {
-                        signUp(context);
-                      }
-                    },
-                    child: Text('Sign Up'),
-                  ),
-                  SizedBox(height: 10),
+                  SizedBox(height: 20),
                   BoxSelect(
                     initialValue: 0,
                     onSaved: (value) {
@@ -92,6 +75,16 @@ class _SignUpPageState extends State<SignUpPage> {
                     },
                   ),
                   SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: () {
+                      if (_signUpFormKey.currentState!.validate()) {
+                        _signUpFormKey.currentState!.save();
+                        signUp(context);
+                      }
+                    },
+                    child: Text('Sign Up'),
+                  ),
+                  SizedBox(height: 30),
                   RichText(
                     text: TextSpan(
                       children: [
