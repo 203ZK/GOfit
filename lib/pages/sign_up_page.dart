@@ -14,6 +14,7 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final _signUpFormKey = GlobalKey<FormState>();
+  final usernameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   int? accountRole = 0;
@@ -25,14 +26,24 @@ class _SignUpPageState extends State<SignUpPage> {
     );
     final user = response.user;
 
-    if (user != null) {
-      print('User ${user.email} created');
+    await supabase.from('profiles').insert({
+      'user_id': user?.id,
+      'username': usernameController.text,
+      'role': accountRole,
+    });
+
+    if (accountRole == 0) {
+      await supabase.from('trainers').insert({'id': user?.id});
+    } else {
+      await supabase.from('clients').insert({
+        'id': user?.id,
+        'trainer_id': null,
+      });
     }
 
-    await supabase.from('profiles')
-      .insert({'user_id': user?.id, 'role': accountRole});
-
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const LogInPage()));
+    Navigator.of(
+      context,
+    ).push(MaterialPageRoute(builder: (context) => const LogInPage()));
   }
 
   @override
@@ -51,6 +62,14 @@ class _SignUpPageState extends State<SignUpPage> {
                 children: [
                   Text('New to GOfit? Create your account'),
                   SizedBox(height: 20),
+                  TextFormField(
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Username',
+                    ),
+                    controller: usernameController,
+                  ),
+                  SizedBox(height: 10),
                   TextFormField(
                     decoration: InputDecoration(
                       border: OutlineInputBorder(),

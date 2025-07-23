@@ -13,18 +13,19 @@ class BoxSelect extends FormField<int> {
                       ? Colors.orange
                       : Colors.grey,
                 ),
-                child: Text('BUSINESS'),
+                child: Text('TRAINER'),
                 onPressed: () {
                   field.didChange(0);
                 },
               ),
+              SizedBox(width: 20),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: field.value == 1
                       ? Colors.orange
                       : Colors.grey,
                 ),
-                child: Text('TRAINER'),
+                child: Text('CLIENT'),
                 onPressed: () {
                   field.didChange(1);
                 },

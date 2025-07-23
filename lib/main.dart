@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gofit/constants/role_constants.dart';
 import 'package:gofit/pages/log_in_page.dart';
+import 'package:gofit/pages/trainer.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
@@ -19,9 +21,44 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'GOfit',
-      home: LogInPage(),
-    );
+    return MaterialApp(title: 'GOfit', home: AuthGate());
+  }
+}
+
+class AuthGate extends StatefulWidget {
+  const AuthGate({super.key});
+
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
+  int? _role;
+
+  Future<void> getTrainerDetails(context) async {
+    final userId = supabase.auth.currentUser!.id;
+
+    try {
+      final response = await supabase
+          .from('profiles')
+          .select()
+          .eq('user_id', userId)
+          .maybeSingle();
+
+      setState(() => _role = response?['role']);
+    } catch (err) {
+      throw Exception("No such profile found");
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_role == null) {
+      return const LogInPage();
+    } else if (_role == trainerRole) {
+      return const TrainerClientsPage();
+    } else {
+      return const Placeholder();
+    }
   }
 }

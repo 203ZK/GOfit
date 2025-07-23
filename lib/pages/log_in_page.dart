@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gofit/main.dart';
 import 'package:gofit/app_themes.dart';
 import 'package:gofit/pages/sign_up_page.dart';
+import 'package:gofit/pages/trainer.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
@@ -27,7 +28,7 @@ class _LogInPageState extends State<LogInPage> {
     if (user != null) {
       Navigator.of(
         context,
-      ).push(MaterialPageRoute(builder: (context) => const Placeholder()));
+      ).push(MaterialPageRoute(builder: (context) => const TrainerClientsPage()));
     }
   }
 
