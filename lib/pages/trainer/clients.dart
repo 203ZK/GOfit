@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:gofit/app_themes.dart';
 import 'package:gofit/main.dart';
-import 'package:gofit/pages/auth/log_in_page.dart';
 
-class TrainerClientsPage extends StatefulWidget {
-  const TrainerClientsPage({super.key});
+class ClientsPage extends StatefulWidget {
+  const ClientsPage({super.key});
 
   @override
-  State<TrainerClientsPage> createState() => _TrainerClientsPageState();
+  State<ClientsPage> createState() => _ClientsPageState();
 }
 
-class _TrainerClientsPageState extends State<TrainerClientsPage> {
+class _ClientsPageState extends State<ClientsPage> {
+  bool _isLoading = true;
   String _username = '';
 
   @override
@@ -20,8 +20,9 @@ class _TrainerClientsPageState extends State<TrainerClientsPage> {
   }
 
   Future<void> getTrainerDetails() async {
-    final userId = supabase.auth.currentUser!.id;
+    setState(() => _isLoading = true);
 
+    final userId = supabase.auth.currentUser!.id;
     try {
       final response = await supabase
           .from('profiles')
@@ -32,13 +33,9 @@ class _TrainerClientsPageState extends State<TrainerClientsPage> {
       setState(() => _username = response?['username']);
     } catch (err) {
       throw Exception("No such profile found");
+    } finally {
+      setState(() => _isLoading = false);
     }
-  }
-
-  Future<void> logOut() async {
-    await supabase.auth.signOut();
-    if (!mounted) return;
-    Navigator.push(context, MaterialPageRoute(builder: (_) => LogInPage()));
   }
 
   @override
@@ -46,12 +43,9 @@ class _TrainerClientsPageState extends State<TrainerClientsPage> {
     return Theme(
       data: appThemes[1],
       child: Scaffold(
-        body: Column(
-          children: [
-            Text('Welcome, $_username'),
-            ElevatedButton(onPressed: logOut, child: Text('Log out')),
-          ],
-        ),
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : Column(children: [Text('Welcome, client $_username')]),
       ),
     );
   }

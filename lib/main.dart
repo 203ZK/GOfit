@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gofit/constants/role_constants.dart';
-import 'package:gofit/pages/client.dart';
+import 'package:gofit/pages/clients/client.dart';
 import 'package:gofit/pages/auth/log_in_page.dart';
 import 'package:gofit/pages/trainer/home.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';

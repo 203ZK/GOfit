@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
 class TrainerNavigationBar extends StatelessWidget {
-  const TrainerNavigationBar({super.key});
+  const TrainerNavigationBar({
+    super.key,
+    this.selectedIndex = 0,
+    required this.onChangeNavigation,
+  });
+
+  final int selectedIndex;
+  final void Function(int) onChangeNavigation;
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +23,8 @@ class TrainerNavigationBar extends StatelessWidget {
           label: 'My Profile',
         ),
       ],
+      currentIndex: selectedIndex,
+      onTap: onChangeNavigation,
     );
   }
 }

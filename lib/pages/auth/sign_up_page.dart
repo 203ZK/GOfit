@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:gofit/constants/role_constants.dart';
 import 'package:gofit/main.dart';
 import 'package:gofit/app_themes.dart';
 import 'package:gofit/pages/auth/log_in_page.dart';
@@ -32,7 +33,7 @@ class _SignUpPageState extends State<SignUpPage> {
       'role': accountRole,
     });
 
-    if (accountRole == 0) {
+    if (accountRole == trainerRole) {
       await supabase.from('trainers').insert({'id': user?.id});
     } else {
       await supabase.from('clients').insert({

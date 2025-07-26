@@ -41,7 +41,6 @@ class _LogInPageState extends State<LogInPage> {
       password: passwordController.text,
     );
     final user = response.user;
-    print(user?.email);
 
     if (user != null) {
       getLoggedInUserDetails(context);

@@ -11,6 +11,7 @@ class ClientsPage extends StatefulWidget {
 }
 
 class _ClientsPageState extends State<ClientsPage> {
+  bool _isLoading = true;
   String _username = '';
 
   @override
@@ -20,8 +21,9 @@ class _ClientsPageState extends State<ClientsPage> {
   }
 
   Future<void> getTrainerDetails() async {
-    final userId = supabase.auth.currentUser!.id;
+    setState(() => _isLoading = true);
 
+    final userId = supabase.auth.currentUser!.id;
     try {
       final response = await supabase
           .from('profiles')
@@ -32,6 +34,8 @@ class _ClientsPageState extends State<ClientsPage> {
       setState(() => _username = response?['username']);
     } catch (err) {
       throw Exception("No such profile found");
+    } finally {
+      setState(() => _isLoading = false);
     }
   }
 
@@ -46,12 +50,13 @@ class _ClientsPageState extends State<ClientsPage> {
     return Theme(
       data: appThemes[1],
       child: Scaffold(
-        body: Column(
-          children: [
-            Text('Welcome, client $_username'),
-            ElevatedButton(onPressed: logOut, child: Text('Log out')),
-          ],
-        ),
+        body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
+              children: [
+                Text('Welcome, client $_username'),
+              ],
+            ),
       ),
     );
   }
