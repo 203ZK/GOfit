@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gofit/constants/role_constants.dart';
-import 'package:gofit/pages/log_in_page.dart';
-import 'package:gofit/pages/trainer.dart';
+import 'package:gofit/pages/client.dart';
+import 'package:gofit/pages/auth/log_in_page.dart';
+import 'package:gofit/pages/trainer/home.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<void> main() async {
@@ -35,7 +36,9 @@ class AuthGate extends StatefulWidget {
 class _AuthGateState extends State<AuthGate> {
   int? _role;
 
-  Future<void> getTrainerDetails(context) async {
+  final session = supabase.auth.currentSession;
+
+  Future<void> getUserDetails() async {
     final userId = supabase.auth.currentUser!.id;
 
     try {
@@ -47,18 +50,21 @@ class _AuthGateState extends State<AuthGate> {
 
       setState(() => _role = response?['role']);
     } catch (err) {
-      throw Exception("No such profile found");
+      print("No profile found");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_role == null) {
+    if (session == null) {
       return const LogInPage();
-    } else if (_role == trainerRole) {
-      return const TrainerClientsPage();
     } else {
-      return const Placeholder();
+      getUserDetails();
+      if (_role == trainerRole) {
+        return const TrainerHomePage();
+      } else {
+        return const ClientsPage();
+      }
     }
   }
 }

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gofit/app_themes.dart';
 import 'package:gofit/main.dart';
+import 'package:gofit/pages/auth/log_in_page.dart';
 
 class TrainerClientsPage extends StatefulWidget {
   const TrainerClientsPage({super.key});
@@ -11,7 +13,13 @@ class TrainerClientsPage extends StatefulWidget {
 class _TrainerClientsPageState extends State<TrainerClientsPage> {
   String _username = '';
 
-  Future<void> getTrainerDetails(context) async {
+  @override
+  void initState() {
+    super.initState();
+    getTrainerDetails();
+  }
+
+  Future<void> getTrainerDetails() async {
     final userId = supabase.auth.currentUser!.id;
 
     try {
@@ -27,9 +35,24 @@ class _TrainerClientsPageState extends State<TrainerClientsPage> {
     }
   }
 
+  Future<void> logOut() async {
+    await supabase.auth.signOut();
+    if (!mounted) return;
+    Navigator.push(context, MaterialPageRoute(builder: (_) => LogInPage()));
+  }
+
   @override
   Widget build(BuildContext context) {
-    getTrainerDetails(context);
-    return Column(children: [Text('Welcome, $_username')]);
+    return Theme(
+      data: appThemes[1],
+      child: Scaffold(
+        body: Column(
+          children: [
+            Text('Welcome, $_username'),
+            ElevatedButton(onPressed: logOut, child: Text('Log out')),
+          ],
+        ),
+      ),
+    );
   }
 }

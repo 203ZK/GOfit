@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gofit/main.dart';
 import 'package:gofit/app_themes.dart';
-import 'package:gofit/pages/log_in_page.dart';
+import 'package:gofit/pages/auth/log_in_page.dart';
 import 'package:gofit/widgets/box_select.dart';
 
 class SignUpPage extends StatefulWidget {

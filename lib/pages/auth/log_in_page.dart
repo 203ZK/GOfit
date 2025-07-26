@@ -1,9 +1,10 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:gofit/constants/role_constants.dart';
 import 'package:gofit/main.dart';
 import 'package:gofit/app_themes.dart';
-import 'package:gofit/pages/sign_up_page.dart';
-import 'package:gofit/pages/trainer.dart';
+import 'package:gofit/pages/auth/sign_up_page.dart';
+import 'package:gofit/pages/trainer/home.dart';
 
 class LogInPage extends StatefulWidget {
   const LogInPage({super.key});
@@ -16,8 +17,25 @@ class _LogInPageState extends State<LogInPage> {
   final _logInFormKey = GlobalKey<FormState>();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  int? _role = trainerRole;
+  
+  Future<void> getLoggedInUserDetails(context) async {
+    final userId = supabase.auth.currentUser!.id;
 
-  Future<void> signUp(context) async {
+    try {
+      final response = await supabase
+          .from('profiles')
+          .select()
+          .eq('user_id', userId)
+          .maybeSingle();
+
+      setState(() => _role = response?['role']);
+    } catch (err) {
+      throw Exception("No such profile found");
+    }
+  }
+
+  Future<void> signIn(context) async {
     final response = await supabase.auth.signInWithPassword(
       email: emailController.text,
       password: passwordController.text,
@@ -26,9 +44,16 @@ class _LogInPageState extends State<LogInPage> {
     print(user?.email);
 
     if (user != null) {
+      getLoggedInUserDetails(context);
       Navigator.of(
         context,
-      ).push(MaterialPageRoute(builder: (context) => const TrainerClientsPage()));
+      ).push(MaterialPageRoute(builder: (context) {
+        if (_role == trainerRole) {
+          return const TrainerHomePage();
+        } else {
+          return const Placeholder();
+        }
+      }));
     }
   }
 
@@ -68,7 +93,7 @@ class _LogInPageState extends State<LogInPage> {
                   ElevatedButton(
                     onPressed: () {
                       if (_logInFormKey.currentState!.validate()) {
-                        signUp(context);
+                        signIn(context);
                       }
                     },
                     child: Text('Log in'),
