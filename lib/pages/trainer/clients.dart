@@ -12,6 +12,7 @@ class ClientsPage extends StatefulWidget {
 class _ClientsPageState extends State<ClientsPage> {
   bool _isLoading = true;
   String _username = '';
+  List<String> _clientNames = [];
 
   @override
   void initState() {
@@ -30,7 +31,19 @@ class _ClientsPageState extends State<ClientsPage> {
           .eq('user_id', userId)
           .maybeSingle();
 
-      setState(() => _username = response?['username']);
+      final clients = await supabase
+          .from('clients')
+          .select('profiles(username)')
+          .eq('trainer_id', userId);
+
+
+      setState(() {
+        _username = response?['username'];
+        _clientNames = (clients as List)
+          .map((client) => client['profiles']['username'] as String)
+          .toList();
+      });
+
     } catch (err) {
       throw Exception("No such profile found");
     } finally {
@@ -40,12 +53,19 @@ class _ClientsPageState extends State<ClientsPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('Client names: $_clientNames');
     return Theme(
       data: appThemes[1],
       child: Scaffold(
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
-            : Column(children: [Text('Welcome, client $_username')]),
+            : Column(
+                children: [
+                  Text('Welcome, client $_username'),
+                  for (var name in _clientNames)
+                    Text(name),
+                ],
+              ),
       ),
     );
   }
