@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gofit/pages/clients/client.dart';
+import 'package:gofit/pages/trainer/clients.dart';
 import 'package:gofit/pages/trainer/profile.dart';
 import 'package:gofit/widgets/trainer_navigation_bar.dart';
 

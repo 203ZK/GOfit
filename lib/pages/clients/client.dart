@@ -47,6 +47,7 @@ class _ClientsPageState extends State<ClientsPage> {
 
   @override
   Widget build(BuildContext context) {
+    print('Got here');
     return Theme(
       data: appThemes[1],
       child: Scaffold(
