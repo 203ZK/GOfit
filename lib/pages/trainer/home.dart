@@ -27,8 +27,6 @@ class _TrainerHomePageState extends State<TrainerHomePage> {
         page = ProfilePage();
     }
 
-    print('Home');
-
     return Scaffold(
       body: Column(
         children: [

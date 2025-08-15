@@ -1,0 +1,1 @@
+const invalidLogInCredentials = "Your username and/or password is incorrect. Please try again.";

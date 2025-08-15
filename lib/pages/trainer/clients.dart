@@ -61,7 +61,7 @@ class _ClientsPageState extends State<ClientsPage> {
             ? const Center(child: CircularProgressIndicator())
             : Column(
                 children: [
-                  Text('Welcome, client $_username'),
+                  Text('Welcome, trainer $_username'),
                   for (var name in _clientNames)
                     Text(name),
                 ],
